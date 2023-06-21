@@ -1,6 +1,6 @@
 const letras = ["A", "a", "B", "C", "E", "e"];
 
-const letraBuscada = "e";
+const letraBuscada = "a";
 let cont = 0;
 
 const letrasIguais = [];
@@ -12,6 +12,10 @@ letras.forEach((item) => {
   }
 });
 
-letrasIguais.forEach((item) => {
-  console.log(`Foram encontradas ${cont} letras ${item}`);
-});
+if (cont === 0) {
+  console.log("Não há letras correspodentes!!");
+} else {
+  console.log(
+    `Foram encontradas ${cont} letras "${letraBuscada.toUpperCase()}" ou "${letraBuscada.toLowerCase()}"`
+  );
+}

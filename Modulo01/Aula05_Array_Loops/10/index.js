@@ -1,14 +1,15 @@
 const numeros = [8, 11, 4, 1];
 
-let diferenca = 0;
+let min = numeros[0];
+let max = numeros[0];
 
-for (let i = 0; i < numeros.length; i++) {
-  for (let j = 0; j < numeros.length; j++) {
-    let temp = Math.abs(numeros[i] - numeros[j]);
-    if (diferenca < temp) {
-      diferenca = temp;
-    }
-  }
+let diferenca;
+
+for (number of numeros) {
+  if (number < min) min = number;
+  else if (number > max) max = number;
+
+  diferenca = max - min;
 }
 
 console.log(diferenca);
