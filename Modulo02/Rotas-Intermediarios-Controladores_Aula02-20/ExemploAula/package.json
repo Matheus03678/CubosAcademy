@@ -1,0 +1,21 @@
+{
+  "name": "exemploaula",
+  "version": "1.0.0",
+  "description": "Exemplo Aula ",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js"
+  },
+  "keywords": [
+    "node",
+    "javascript"
+  ],
+  "author": "Matheus",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

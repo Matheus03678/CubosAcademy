@@ -1,0 +1,21 @@
+{
+  "name": "consulta_imoveis",
+  "version": "1.0.0",
+  "description": "Consulta de imoveis cadastrados",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js"
+  },
+  "keywords": [
+    "nodem",
+    "javascript"
+  ],
+  "author": "Matheus R",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
