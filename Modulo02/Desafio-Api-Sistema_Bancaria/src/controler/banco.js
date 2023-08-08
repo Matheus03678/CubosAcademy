@@ -58,29 +58,21 @@ const Post = (req, res) => {
 const Depositar = (req, res) => {
   const { numero_conta, valor } = req.body;
 
-  console.log(typeof numero_conta, typeof valor);
-  console.log(numero_conta, valor);
-
   if (String(numero_conta) && String(valor)) {
-    console.log("entrei");
     if (valor <= 0) {
       return res.status(400).json({
         mensagem: "Não é possivel somar valores negativos nem nulos(0) ",
       });
     }
 
-    console.log("cheguei no forEach");
-
     const conta = contas.find((obj) => {
       return obj.numero === numero_conta;
     });
 
-    console.log(conta);
-
-    if (conta === undefined) {
+    console.log("passei do find");
+    if (String(conta) === String(undefined)) {
       return res.status(400).json({
         mensagem: "Conta não encontrada para depositar",
-        contas,
       });
     } else {
       conta.saldo += valor;
@@ -94,20 +86,142 @@ const Depositar = (req, res) => {
       depositos.push(registro);
       return res.status(201).json({
         mensagem: "Depósito realizado com sucesso",
-        contas,
         depositos,
       });
     }
   } else {
     return res.status(400).json({
       mensagem: "Conta não encontrada para depositar",
-      contas,
     });
   }
 };
 
 // Sacar
+
+const Sacar = (req, res) => {
+  const { numero_conta, valor, senha } = req.body;
+
+  const conta = contas.find((obj) => {
+    return obj.numero === numero_conta;
+  });
+
+  if (conta && conta.usuario.senha === String(senha)) {
+    if (conta.saldo <= 0) {
+      return res.status(400).json({
+        mensagem: "Valor insuficente para saque.",
+      });
+    }
+    if (valor > conta.saldo) {
+      return res.status(400).json({
+        mensagem: "Erro ao sacar, valor maior que o presente em conta.",
+        saldo: conta.saldo,
+      });
+    }
+    conta.saldo -= valor;
+
+    const registro = {
+      data: getData(),
+      numero_conta,
+      valor,
+    };
+
+    saques.push(registro);
+
+    return res.status(201).json({
+      mensagem: "Saque realizado com sucesso",
+      saques,
+    });
+  }
+
+  return res.status(404).json({
+    mensagem: "Verifique o numero da conta ou senha.",
+  });
+};
+
 // Transferir
+
+const Transferir = (req, res) => {
+  const { numero_conta_origen, numero_conta_destino, valor, senha } = req.body;
+  let contaOrigen = {};
+  let contaDestino = {};
+  let registro = {};
+
+  contaOrigen = contas.find((obj) => {
+    return obj.numero === numero_conta_origen;
+  });
+
+  contaDestino = contas.find((obj) => {
+    return obj.numero === numero_conta_destino;
+  });
+
+  if (
+    contaOrigen &&
+    contaDestino &&
+    contaOrigen.usuario.senha === String(senha)
+  ) {
+    if (contaOrigen.numero !== contaDestino.numero) {
+      if (contaOrigen.saldo > 0 && valor <= contaOrigen.saldo) {
+        contaOrigen.saldo -= valor;
+        contaDestino.saldo += valor;
+
+        registro = {
+          data: getData(),
+          numero_conta_origen,
+          numero_conta_destino,
+          valor,
+        };
+
+        transferencias.push(registro);
+
+        return res.status(200).json({
+          mensagem: "Transferência realizado com sucesso",
+          contas,
+        });
+      } else {
+        return res.status(400).json({
+          mensagem: "Valor insuficiente em conta.",
+        });
+      }
+    }
+  } else {
+    return res.status(404).json({
+      mensagem: "Numero de conta errado ou inexistente.",
+    });
+  }
+};
+
+// Consultar Saldo
+const Get_Saldo = (req, res) => {
+  const { numero_conta, senha } = req.query;
+
+  if (numero_conta && senha) {
+    const conta = contas.find((obj) => {
+      return obj.numero === Number(numero_conta);
+    });
+
+    if (conta === undefined) {
+      console.log("conta inexistente");
+      return res.status(400).json({
+        mensagem: "Conta inexistente.",
+      });
+    }
+    if (String(senha) === conta.usuario.senha) {
+      return res.status(200).json({
+        mensagem: `Seu saldo é ${conta.saldo}`,
+      });
+    }
+
+    return res.status(400).json({
+      mensagem: "Senha inforamda incorreta.",
+    });
+  }
+
+  return res.status(400).json({
+    mensagem: "Numero de conta não informado.",
+  });
+};
+
+//Extrato
 
 // ------------------------ PUT --------------------------------
 
@@ -170,4 +284,7 @@ module.exports = {
   Put,
   deleteCont,
   Depositar,
+  Sacar,
+  Transferir,
+  Get_Saldo,
 };
