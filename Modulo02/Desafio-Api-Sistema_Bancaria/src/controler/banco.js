@@ -200,7 +200,6 @@ const Get_Saldo = (req, res) => {
     });
 
     if (conta === undefined) {
-      console.log("conta inexistente");
       return res.status(400).json({
         mensagem: "Conta inexistente.",
       });
